@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ config('app.name', 'Clothing Shop') }} - Admin</title>
+        <title>{{ config('app.name', 'Clothing Shop') }} - Quản trị</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -92,26 +92,26 @@
     <body>
         <div class="admin-shell d-flex">
             <aside class="admin-sidebar p-3 p-lg-4">
-                <div class="admin-brand fw-semibold text-white mb-4">Clothing Admin</div>
+                <div class="admin-brand fw-semibold text-white mb-4">Quản trị cửa hàng</div>
                 <nav class="d-grid gap-2">
-                    <a class="admin-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    <a class="admin-link" href="{{ route('admin.products.index') }}">Products</a>
-                    <a class="admin-link" href="{{ route('admin.categories.index') }}">Categories</a>
-                    <a class="admin-link" href="{{ route('admin.orders.index') }}">Orders</a>
+                    <a class="admin-link" href="{{ route('admin.dashboard') }}">Tổng quan</a>
+                    <a class="admin-link" href="{{ route('admin.products.index') }}">Sản phẩm</a>
+                    <a class="admin-link" href="{{ route('admin.categories.index') }}">Danh mục</a>
+                    <a class="admin-link" href="{{ route('admin.orders.index') }}">Đơn hàng</a>
                 </nav>
                 <div class="mt-4">
-                    <a class="admin-link" href="{{ route('home') }}">Back to shop</a>
+                    <a class="admin-link" href="{{ route('home') }}">Về cửa hàng</a>
                 </div>
             </aside>
             <div class="flex-grow-1">
                 <header class="admin-topbar px-4 py-3 d-flex justify-content-between align-items-center">
                     <div>
-                        <div class="text-uppercase text-muted small">Admin Panel</div>
+                        <div class="text-uppercase text-muted small">Bảng quản trị</div>
                         <div class="fw-semibold text-white">{{ Auth::user()->name }}</div>
                     </div>
                     <form method="post" action="{{ route('logout') }}">
                         @csrf
-                        <button class="btn btn-outline-light btn-sm" type="submit">Logout</button>
+                        <button class="btn btn-outline-light btn-sm" type="submit">Đăng xuất</button>
                     </form>
                 </header>
                 <main class="p-4 p-lg-5">

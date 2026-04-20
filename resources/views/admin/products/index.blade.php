@@ -3,10 +3,10 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">Products</h2>
-            <p class="text-muted mb-0">Manage your catalog and pricing.</p>
+            <h2 class="mb-1">Sản phẩm</h2>
+            <p class="text-muted mb-0">Quản lý sản phẩm và giá bán.</p>
         </div>
-        <a class="btn btn-dark" href="{{ route('admin.products.create') }}">Add product</a>
+        <a class="btn btn-dark" href="{{ route('admin.products.create') }}">Thêm sản phẩm</a>
     </div>
 
     <div class="admin-card p-4">
@@ -15,9 +15,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
+                        <th>Tên</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
                         <th width="160"></th>
                     </tr>
                 </thead>
@@ -29,17 +29,17 @@
                             <td>{{ $product->category?->name }}</td>
                             <td>{{ number_format($product->price, 0) }} VND</td>
                             <td class="d-flex gap-2">
-                                <a class="btn btn-outline-secondary btn-sm" href="{{ route('admin.products.edit', $product) }}">Edit</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="{{ route('admin.products.edit', $product) }}">Sửa</a>
                                 <form method="post" action="{{ route('admin.products.destroy', $product) }}">
                                     @csrf
                                     @method('delete')
-                                    <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+                                    <button class="btn btn-outline-danger btn-sm" type="submit">Xóa</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-muted">No products yet.</td>
+                            <td colspan="5" class="text-muted">Chưa có sản phẩm.</td>
                         </tr>
                     @endforelse
                 </tbody>

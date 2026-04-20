@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -123,7 +123,7 @@
         <nav class="navbar navbar-expand-lg nav-glass py-3">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
-                    <span class="brand-pill">CLOTHING</span>
+                    <span class="brand-pill">THỜI TRANG</span>
                     <span class="fw-semibold">Shop</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -132,18 +132,18 @@
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('home') }}">Home</a>
+                            <a class="nav-link" href="{{ route('home') }}">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('products.index') }}">Products</a>
+                            <a class="nav-link" href="{{ route('products.index') }}">Sản phẩm</a>
                         </li>
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
+                                <a class="nav-link" href="{{ route('orders.index') }}">Đơn hàng</a>
                             </li>
                         @endauth
                         <li class="nav-item">
-                            <a class="nav-link cart-link" href="{{ route('cart.index') }}" aria-label="Cart">
+                            <a class="nav-link cart-link" href="{{ route('cart.index') }}" aria-label="Gio hang">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M6 6H22L20 14H8L6 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
                                     <path d="M6 6L4 3H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -156,17 +156,17 @@
                     </ul>
                     <div class="d-flex align-items-center gap-2">
                         @guest
-                            <a class="btn btn-outline-brand btn-sm" href="{{ route('login') }}">Login</a>
-                            <a class="btn btn-brand btn-sm" href="{{ route('register') }}">Register</a>
+                            <a class="btn btn-outline-brand btn-sm" href="{{ route('login') }}">Đăng nhập</a>
+                            <a class="btn btn-brand btn-sm" href="{{ route('register') }}">Đăng ký</a>
                         @else
-                            <span class="text-muted">Hello,</span>
+                            <span class="text-muted">Xin chào,</span>
                             <span class="fw-semibold">{{ Auth::user()->name }}</span>
                             @if (Auth::user()->is_admin)
-                                <a class="btn btn-outline-brand btn-sm" href="{{ route('admin.dashboard') }}">Admin</a>
+                                <a class="btn btn-outline-brand btn-sm" href="{{ route('admin.dashboard') }}">Quản trị</a>
                             @endif
                             <form method="post" action="{{ route('logout') }}">
                                 @csrf
-                                <button class="btn btn-outline-brand btn-sm" type="submit">Logout</button>
+                                <button class="btn btn-outline-brand btn-sm" type="submit">Đăng xuất</button>
                             </form>
                         @endguest
                     </div>

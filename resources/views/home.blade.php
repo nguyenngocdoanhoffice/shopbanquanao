@@ -4,26 +4,26 @@
     <div class="row align-items-center g-4 mb-4 mb-lg-5">
         <div class="col-12 col-lg-6">
             <div class="p-4 p-lg-5 bg-white rounded-4 shadow-sm fade-up" style="--delay: 0s;">
-                <span class="soft-pill">New collection 2026</span>
-                <h1 class="mt-3 mb-3">Modern outfits for everyday confidence</h1>
-                <p class="text-muted mb-4">Pick outfits that feel good and look sharp. Curated basics, denim, and cozy layers.</p>
+                <span class="soft-pill">Bộ sưu tập mới 2026</span>
+                <h1 class="mt-3 mb-3">Trang phục hiện đại cho mỗi ngày</h1>
+                <p class="text-muted mb-4">Chọn đồ mặc thoải mái và tự tin. Bộ sưu tập cơ bản, denim và đồ ấm áp.</p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a class="btn btn-brand" href="{{ route('products.index') }}">Shop now</a>
-                    <a class="btn btn-outline-brand" href="{{ route('cart.index') }}">View cart</a>
+                    <a class="btn btn-brand" href="{{ route('products.index') }}">Mua ngay</a>
+                    <a class="btn btn-outline-brand" href="{{ route('cart.index') }}">Xem giỏ hàng</a>
                 </div>
             </div>
         </div>
         <div class="col-12 col-lg-6">
             <div class="p-4 p-lg-5 rounded-4 text-white fade-up" style="--delay: 0.1s; background: linear-gradient(135deg, #0f172a, #1f2937);">
-                <h4 class="mb-2">Fast pickup & easy returns</h4>
-                <p class="mb-0 text-white-50">Try styles at home, exchange in 7 days with no stress.</p>
+                <h4 class="mb-2">Nhận hàng nhanh & đổi trả dễ dàng</h4>
+                <p class="mb-0 text-white-50">Thử đồ tại nhà, đổi trả trong 7 ngày.</p>
             </div>
         </div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 class="mb-0">Newest products</h3>
-        <a class="btn btn-outline-brand btn-sm" href="{{ route('products.index') }}">View all</a>
+        <h3 class="mb-0">Sản phẩm mới</h3>
+        <a class="btn btn-outline-brand btn-sm" href="{{ route('products.index') }}">Xem tất cả</a>
     </div>
 
     <div class="row g-4">
@@ -48,8 +48,8 @@
                         <h5 class="card-title mt-3">{{ $product->name }}</h5>
                         <p class="fw-semibold mb-3">{{ number_format($product->price, 0) }} VND</p>
                         <div class="d-flex gap-2">
-                            <a class="btn btn-outline-brand btn-sm" href="{{ route('products.show', $product) }}">View details</a>
-                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}">Add to cart</button>
+                            <a class="btn btn-outline-brand btn-sm" href="{{ route('products.show', $product) }}">Xem chi tiết</a>
+                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}">Thêm vào giỏ</button>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">{{ $product->name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                             </div>
                             <div class="modal-body">
                                 @if ($imageUrl)
@@ -71,16 +71,16 @@
                             <div class="modal-footer">
                                 <form method="post" action="{{ route('cart.add', $product) }}">
                                     @csrf
-                                    <button class="btn btn-brand" type="submit">Add to cart</button>
+                                    <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
                                 </form>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         @empty
-            <p class="text-muted">No products yet.</p>
+            <p class="text-muted">Chưa có sản phẩm.</p>
         @endforelse
     </div>
 @endsection

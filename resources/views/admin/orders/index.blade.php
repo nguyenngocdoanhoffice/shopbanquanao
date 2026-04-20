@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="mb-4">
-        <h2 class="mb-1">Orders</h2>
-        <p class="text-muted mb-0">Track the latest customer activity.</p>
+        <h2 class="mb-1">Đơn hàng</h2>
+        <p class="text-muted mb-0">Theo dõi hoạt động khách hàng.</p>
     </div>
 
     <div class="admin-card p-4">
@@ -12,11 +12,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>User</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Items</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Sản phẩm</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,14 +29,23 @@
                                 <form method="post" action="{{ route('admin.orders.update', $order) }}" class="d-flex gap-2 align-items-center">
                                     @csrf
                                     @method('patch')
+                                    @php
+                                        $statusLabels = [
+                                            'pending' => 'Chờ xử lý',
+                                            'processing' => 'Đang xử lý',
+                                            'shipping' => 'Đang giao',
+                                            'completed' => 'Hoàn thành',
+                                            'canceled' => 'Đã hủy',
+                                        ];
+                                    @endphp
                                     <select name="status" class="form-select form-select-sm" style="min-width: 140px;">
-                                        @foreach (['pending', 'processing', 'shipping', 'completed', 'canceled'] as $status)
+                                        @foreach ($statusLabels as $status => $label)
                                             <option value="{{ $status }}" @selected($order->status === $status)>
-                                                {{ ucfirst($status) }}
+                                                {{ $label }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button class="btn btn-outline-dark btn-sm" type="submit">Save</button>
+                                    <button class="btn btn-outline-dark btn-sm" type="submit">Lưu</button>
                                 </form>
                             </td>
                             <td>{{ $order->created_at?->format('Y-m-d') }}</td>
@@ -50,7 +59,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-muted">No orders yet.</td>
+                            <td colspan="6" class="text-muted">Chưa có đơn hàng.</td>
                         </tr>
                     @endforelse
                 </tbody>

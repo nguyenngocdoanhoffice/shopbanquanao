@@ -3,19 +3,19 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h2 class="mb-1">Products</h2>
-            <p class="text-muted mb-0">Find your next favorite outfit.</p>
+            <h2 class="mb-1">Sản phẩm</h2>
+            <p class="text-muted mb-0">Tìm món đồ yêu thích của bạn.</p>
         </div>
     </div>
 
     <div class="bg-white p-3 p-lg-4 rounded-4 shadow-sm mb-4">
         <form class="row g-3 align-items-end" method="get" action="{{ route('products.index') }}">
             <div class="col-12 col-md-6">
-                <label class="form-label">Search</label>
-                <input type="text" name="q" class="form-control" value="{{ request('q') }}" placeholder="Search by product or category">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" name="q" class="form-control" value="{{ request('q') }}" placeholder="Tìm theo tên sản phẩm hoặc danh mục">
             </div>
             <div class="col-12 col-md-3">
-                <button class="btn btn-brand w-100" type="submit">Search</button>
+                <button class="btn btn-brand w-100" type="submit">Tìm</button>
             </div>
         </form>
     </div>
@@ -42,8 +42,8 @@
                         <h5 class="card-title mt-3">{{ $product->name }}</h5>
                         <p class="fw-semibold mb-3">{{ number_format($product->price, 0) }} VND</p>
                         <div class="d-flex gap-2">
-                            <a class="btn btn-outline-brand btn-sm" href="{{ route('products.show', $product) }}">View details</a>
-                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}">Add to cart</button>
+                            <a class="btn btn-outline-brand btn-sm" href="{{ route('products.show', $product) }}">Xem chi tiết</a>
+                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}">Thêm vào giỏ</button>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">{{ $product->name }}</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                             </div>
                             <div class="modal-body">
                                 @if ($imageUrl)
@@ -65,16 +65,16 @@
                             <div class="modal-footer">
                                 <form method="post" action="{{ route('cart.add', $product) }}">
                                     @csrf
-                                    <button class="btn btn-brand" type="submit">Add to cart</button>
+                                    <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
                                 </form>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         @empty
-            <p class="text-muted">No products found.</p>
+            <p class="text-muted">Không tìm thấy sản phẩm.</p>
         @endforelse
     </div>
 

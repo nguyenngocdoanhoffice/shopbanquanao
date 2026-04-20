@@ -34,10 +34,10 @@
                 <form method="post" action="{{ route('cart.add', $product) }}" class="d-flex flex-wrap gap-3">
                     @csrf
                     <div>
-                        <label class="form-label">Size</label>
+                        <label class="form-label">Kích cỡ</label>
                         <select name="size" class="form-select" style="min-width: 140px;" @disabled($sizes->isEmpty())>
                             @if ($sizes->isEmpty())
-                                <option value="">Free size</option>
+                                <option value="">Freesize</option>
                             @else
                                 @foreach ($sizes as $size)
                                     <option value="{{ $size }}">{{ $size }}</option>
@@ -46,12 +46,12 @@
                         </select>
                     </div>
                     <div>
-                        <label class="form-label">Quantity</label>
+                        <label class="form-label">Số lượng</label>
                         <input type="number" name="quantity" class="form-control" value="1" min="1" style="max-width: 120px;">
                     </div>
                     <div class="d-flex gap-2 align-self-end">
-                        <button class="btn btn-brand" type="submit">Add to cart</button>
-                        <a class="btn btn-outline-brand" href="{{ route('products.index') }}">Back</a>
+                        <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
+                        <a class="btn btn-outline-brand" href="{{ route('products.index') }}">Quay lại</a>
                     </div>
                 </form>
             </div>
