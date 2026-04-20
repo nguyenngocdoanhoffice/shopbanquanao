@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index()
     {
-        // Store cart data in session for a simple example.
-        $cart = session()->get('cart', []);
+        $cart = Auth::check()
+            ? $this->loadUserCartToSession()
+            : session()->get('cart', []);
         $total = $this->cartTotal($cart);
 
         return view('cart.index', compact('cart', 'total'));
@@ -23,25 +26,39 @@ class CartController extends Controller
             'size' => ['nullable', 'string', 'max:20'],
         ]);
 
-        // Use product id as the session key.
-        $cart = session()->get('cart', []);
         $quantity = $data['quantity'] ?? 1;
         $size = $data['size'] ?? null;
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] += $quantity;
-            $cart[$product->id]['size'] = $size ?? $cart[$product->id]['size'];
-        } else {
-            $cart[$product->id] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $quantity,
-                'size' => $size,
-            ];
-        }
+        if (Auth::check()) {
+            $item = CartItem::firstOrNew([
+                'user_id' => Auth::id(),
+                'product_id' => $product->id,
+            ]);
 
-        session()->put('cart', $cart);
+            $item->quantity = ($item->quantity ?? 0) + $quantity;
+            $item->size = $size ?? $item->size;
+            $item->save();
+
+            $this->loadUserCartToSession();
+        } else {
+            // Use product id as the session key for guests.
+            $cart = session()->get('cart', []);
+
+            if (isset($cart[$product->id])) {
+                $cart[$product->id]['quantity'] += $quantity;
+                $cart[$product->id]['size'] = $size ?? $cart[$product->id]['size'];
+            } else {
+                $cart[$product->id] = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $quantity,
+                    'size' => $size,
+                ];
+            }
+
+            session()->put('cart', $cart);
+        }
 
         return back()->with('success', 'Added to cart.');
     }
@@ -52,10 +69,17 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $cart = session()->get('cart', []);
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] = $data['quantity'];
-            session()->put('cart', $cart);
+        if (Auth::check()) {
+            CartItem::where('user_id', Auth::id())
+                ->where('product_id', $product->id)
+                ->update(['quantity' => $data['quantity']]);
+            $this->loadUserCartToSession();
+        } else {
+            $cart = session()->get('cart', []);
+            if (isset($cart[$product->id])) {
+                $cart[$product->id]['quantity'] = $data['quantity'];
+                session()->put('cart', $cart);
+            }
         }
 
         return back()->with('success', 'Cart updated.');
@@ -63,11 +87,18 @@ class CartController extends Controller
 
     public function remove(Product $product)
     {
-        $cart = session()->get('cart', []);
+        if (Auth::check()) {
+            CartItem::where('user_id', Auth::id())
+                ->where('product_id', $product->id)
+                ->delete();
+            $this->loadUserCartToSession();
+        } else {
+            $cart = session()->get('cart', []);
 
-        if (isset($cart[$product->id])) {
-            unset($cart[$product->id]);
-            session()->put('cart', $cart);
+            if (isset($cart[$product->id])) {
+                unset($cart[$product->id]);
+                session()->put('cart', $cart);
+            }
         }
 
         return back()->with('success', 'Item removed.');
@@ -81,5 +112,30 @@ class CartController extends Controller
         }
 
         return $total;
+    }
+
+    private function loadUserCartToSession(): array
+    {
+        $items = CartItem::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $cart = [];
+        foreach ($items as $item) {
+            if (!$item->product) {
+                continue;
+            }
+            $cart[$item->product_id] = [
+                'id' => $item->product_id,
+                'name' => $item->product->name,
+                'price' => $item->product->price,
+                'quantity' => $item->quantity,
+                'size' => $item->size,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        return $cart;
     }
 }

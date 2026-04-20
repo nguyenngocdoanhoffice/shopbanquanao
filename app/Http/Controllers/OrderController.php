@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,6 +56,7 @@ class OrderController extends Controller
         }
 
         session()->forget('cart');
+        CartItem::where('user_id', Auth::id())->delete();
 
         return redirect()->route('home')->with('success', 'Order placed successfully.');
     }

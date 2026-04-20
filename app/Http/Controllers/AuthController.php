@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,26 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            $cart = [];
+            $items = CartItem::with('product')
+                ->where('user_id', Auth::id())
+                ->get();
+
+            foreach ($items as $item) {
+                if (!$item->product) {
+                    continue;
+                }
+                $cart[$item->product_id] = [
+                    'id' => $item->product_id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->price,
+                    'quantity' => $item->quantity,
+                    'size' => $item->size,
+                ];
+            }
+
+            $request->session()->put('cart', $cart);
 
             $user = Auth::user();
             $target = $user && $user->is_admin
@@ -68,6 +89,8 @@ class AuthController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        $request->session()->forget('cart');
 
         return redirect()->route('home');
     }
