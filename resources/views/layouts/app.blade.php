@@ -130,12 +130,19 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <div class="d-flex flex-column flex-lg-row w-100 align-items-lg-center gap-3">
+                        <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('home') }}">Trang chủ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('products.index') }}">Sản phẩm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('about') }}">Giới thiệu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('contact') }}">Liên hệ</a>
                         </li>
                         @auth
                             <li class="nav-item">
@@ -153,8 +160,8 @@
                                 <span class="cart-badge">{{ $cartCount }}</span>
                             </a>
                         </li>
-                    </ul>
-                    <div class="d-flex align-items-center gap-2">
+                        </ul>
+                        <div class="d-flex align-items-center gap-2 ms-lg-auto">
                         @guest
                             <a class="btn btn-outline-brand btn-sm" href="{{ route('login') }}">Đăng nhập</a>
                             <a class="btn btn-brand btn-sm" href="{{ route('register') }}">Đăng ký</a>
@@ -169,6 +176,7 @@
                                 <button class="btn btn-outline-brand btn-sm" type="submit">Đăng xuất</button>
                             </form>
                         @endguest
+                        </div>
                     </div>
                 </div>
             </div>
