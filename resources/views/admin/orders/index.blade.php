@@ -11,7 +11,7 @@
             <table class="table align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Khách hàng</th>
                         <th>Tổng</th>
                         <th>Trạng thái</th>
@@ -22,7 +22,7 @@
                 <tbody>
                     @forelse ($orders as $order)
                         <tr>
-                            <td>#{{ $order->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $order->user?->name }}</td>
                             <td>{{ number_format($order->total, 0) }} VND</td>
                             <td>

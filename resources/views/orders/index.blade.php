@@ -16,7 +16,7 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>STT</th>
                             <th>Trạng thái</th>
                             <th>Tổng</th>
                             <th>Ngày tạo</th>
@@ -26,7 +26,7 @@
                     <tbody>
                         @foreach ($orders as $order)
                             <tr>
-                                <td>#{{ $order->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>
                                     @php
                                         $statusLabels = [

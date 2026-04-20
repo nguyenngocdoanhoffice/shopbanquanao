@@ -14,7 +14,7 @@
             <table class="table align-middle">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>STT</th>
                         <th>Tên</th>
                         <th width="160"></th>
                     </tr>
@@ -22,7 +22,7 @@
                 <tbody>
                     @forelse ($categories as $category)
                         <tr>
-                            <td>#{{ $category->id }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $category->name }}</td>
                             <td class="d-flex gap-2">
                                 <a class="btn btn-outline-secondary btn-sm" href="{{ route('admin.categories.edit', $category) }}">Sửa</a>
