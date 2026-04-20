@@ -26,10 +26,33 @@
                 <p class="fw-semibold fs-4 mb-3">{{ number_format($product->price, 0) }} VND</p>
                 <p class="text-muted mb-4">{{ $product->description }}</p>
 
-                <form method="post" action="{{ route('cart.add', $product) }}" class="d-flex flex-wrap gap-2">
+                @php
+                    $sizes = collect(explode(',', (string) $product->size))
+                        ->map(fn ($size) => trim($size))
+                        ->filter();
+                @endphp
+                <form method="post" action="{{ route('cart.add', $product) }}" class="d-flex flex-wrap gap-3">
                     @csrf
-                    <button class="btn btn-brand" type="submit">Add to cart</button>
-                    <a class="btn btn-outline-brand" href="{{ route('products.index') }}">Back</a>
+                    <div>
+                        <label class="form-label">Size</label>
+                        <select name="size" class="form-select" style="min-width: 140px;" @disabled($sizes->isEmpty())>
+                            @if ($sizes->isEmpty())
+                                <option value="">Free size</option>
+                            @else
+                                @foreach ($sizes as $size)
+                                    <option value="{{ $size }}">{{ $size }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" style="max-width: 120px;">
+                    </div>
+                    <div class="d-flex gap-2 align-self-end">
+                        <button class="btn btn-brand" type="submit">Add to cart</button>
+                        <a class="btn btn-outline-brand" href="{{ route('products.index') }}">Back</a>
+                    </div>
                 </form>
             </div>
         </div>

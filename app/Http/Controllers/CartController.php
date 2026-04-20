@@ -16,19 +16,28 @@ class CartController extends Controller
         return view('cart.index', compact('cart', 'total'));
     }
 
-    public function add(Product $product)
+    public function add(Request $request, Product $product)
     {
+        $data = $request->validate([
+            'quantity' => ['nullable', 'integer', 'min:1'],
+            'size' => ['nullable', 'string', 'max:20'],
+        ]);
+
         // Use product id as the session key.
         $cart = session()->get('cart', []);
+        $quantity = $data['quantity'] ?? 1;
+        $size = $data['size'] ?? null;
 
         if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity']++;
+            $cart[$product->id]['quantity'] += $quantity;
+            $cart[$product->id]['size'] = $size ?? $cart[$product->id]['size'];
         } else {
             $cart[$product->id] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'quantity' => 1,
+                'quantity' => $quantity,
+                'size' => $size,
             ];
         }
 

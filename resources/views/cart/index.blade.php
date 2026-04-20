@@ -17,6 +17,7 @@
                     <thead>
                         <tr>
                             <th>Product</th>
+                            <th width="120">Size</th>
                             <th width="140">Price</th>
                             <th width="160">Quantity</th>
                             <th width="160">Subtotal</th>
@@ -27,6 +28,7 @@
                         @foreach ($cart as $item)
                             <tr>
                                 <td>{{ $item['name'] }}</td>
+                                <td>{{ $item['size'] ?? 'Free' }}</td>
                                 <td>{{ number_format($item['price'], 0) }} VND</td>
                                 <td>
                                     <form method="post" action="{{ route('cart.update', $item['id']) }}" class="d-flex gap-2">

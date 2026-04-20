@@ -33,6 +33,10 @@
                 <textarea name="description" class="form-control" rows="3">{{ old('description', $product->description) }}</textarea>
             </div>
             <div class="mb-3">
+                <label class="form-label">Sizes (comma separated)</label>
+                <input type="text" name="size" class="form-control" value="{{ old('size', $product->size) }}" placeholder="S, M, L, XL">
+            </div>
+            <div class="mb-3">
                 <label class="form-label">Product image</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
                 @if ($product->image)
