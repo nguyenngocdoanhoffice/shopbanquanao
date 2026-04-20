@@ -10,19 +10,12 @@
 
     <div class="bg-white p-3 p-lg-4 rounded-4 shadow-sm mb-4">
         <form class="row g-3 align-items-end" method="get" action="{{ route('products.index') }}">
-            <div class="col-12 col-md-5">
-                <label class="form-label">Category</label>
-                <select class="form-select" name="category">
-                    <option value="">All categories</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @selected(request('category') == $category->id)>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
+            <div class="col-12 col-md-6">
+                <label class="form-label">Search</label>
+                <input type="text" name="q" class="form-control" value="{{ request('q') }}" placeholder="Search by product or category">
             </div>
             <div class="col-12 col-md-3">
-                <button class="btn btn-brand w-100" type="submit">Apply filter</button>
+                <button class="btn btn-brand w-100" type="submit">Search</button>
             </div>
         </form>
     </div>

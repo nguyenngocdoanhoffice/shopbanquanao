@@ -17,16 +17,18 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $categories = Category::orderBy('name')->get();
-
         $query = Product::with('category')->latest();
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+        if ($request->filled('q')) {
+            $keyword = $request->q;
+            $query->where('name', 'like', "%{$keyword}%")
+                ->orWhereHas('category', function ($builder) use ($keyword) {
+                    $builder->where('name', 'like', "%{$keyword}%");
+                });
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(12)->withQueryString();
 
-        return view('products.index', compact('products', 'categories'));
+        return view('products.index', compact('products'));
     }
 
     public function show(Product $product)
