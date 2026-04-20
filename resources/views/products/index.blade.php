@@ -54,21 +54,44 @@
                                 <h5 class="modal-title">{{ $product->name }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                             </div>
-                            <div class="modal-body">
-                                @if ($imageUrl)
-                                    <img src="{{ $imageUrl }}" class="img-fluid rounded-3 mb-3" alt="{{ $product->name }}">
-                                @endif
-                                <p class="text-muted mb-2">{{ $product->category?->name }}</p>
-                                <p class="fw-semibold">{{ number_format($product->price, 0) }} VND</p>
-                                <p class="text-muted mb-0">{{ $product->description }}</p>
-                            </div>
-                            <div class="modal-footer">
-                                <form method="post" action="{{ route('cart.add', $product) }}">
-                                    @csrf
+                            <form method="post" action="{{ route('cart.add', $product) }}">
+                                @csrf
+                                <div class="modal-body">
+                                    @if ($imageUrl)
+                                        <img src="{{ $imageUrl }}" class="img-fluid rounded-3 mb-3" alt="{{ $product->name }}">
+                                    @endif
+                                    <p class="text-muted mb-2">{{ $product->category?->name }}</p>
+                                    <p class="fw-semibold">{{ number_format($product->price, 0) }} VND</p>
+                                    <p class="text-muted">{{ $product->description }}</p>
+                                    @php
+                                        $sizes = collect(explode(',', (string) $product->size))
+                                            ->map(fn ($size) => trim($size))
+                                            ->filter();
+                                    @endphp
+                                    <div class="row g-3 mt-2">
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label">Kích cỡ</label>
+                                            <select name="size" class="form-select" @disabled($sizes->isEmpty())>
+                                                @if ($sizes->isEmpty())
+                                                    <option value="">Freesize</option>
+                                                @else
+                                                    @foreach ($sizes as $size)
+                                                        <option value="{{ $size }}">{{ $size }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label">Số lượng</label>
+                                            <input type="number" name="quantity" class="form-control" value="1" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
                                     <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
-                                </form>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
-                            </div>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
