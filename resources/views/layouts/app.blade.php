@@ -137,6 +137,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('products.index') }}">Products</a>
                         </li>
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
+                            </li>
+                        @endauth
                         <li class="nav-item">
                             <a class="nav-link cart-link" href="{{ route('cart.index') }}" aria-label="Cart">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

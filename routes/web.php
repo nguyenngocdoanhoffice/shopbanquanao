@@ -33,11 +33,13 @@ Route::post('/logout', [AuthController::class, 'logout'])
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout.index');
     Route::post('/checkout', [OrderController::class, 'place'])->name('checkout.place');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 
     Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
         Route::resource('products', AdminProductController::class)->except(['show']);
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::patch('orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
     });
 });

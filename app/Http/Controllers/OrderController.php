@@ -22,6 +22,16 @@ class OrderController extends Controller
         return view('checkout.index', compact('cart', 'total'));
     }
 
+    public function index()
+    {
+        $orders = Order::with('items.product')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('orders.index', compact('orders'));
+    }
+
     public function place(Request $request)
     {
         $cart = session()->get('cart', []);
