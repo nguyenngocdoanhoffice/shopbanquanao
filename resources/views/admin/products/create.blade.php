@@ -7,7 +7,7 @@
     </div>
 
     <div class="admin-card p-4">
-        <form method="post" action="{{ route('admin.products.store') }}">
+        <form method="post" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label class="form-label">Category</label>
@@ -31,8 +31,8 @@
                 <textarea name="description" class="form-control" rows="3">{{ old('description') }}</textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label">Image URL</label>
-                <input type="text" name="image" class="form-control" value="{{ old('image') }}">
+                <label class="form-label">Product image</label>
+                <input type="file" name="image" class="form-control" accept="image/*">
             </div>
             <button class="btn btn-dark" type="submit">Save</button>
             <a class="btn btn-outline-secondary" href="{{ route('admin.products.index') }}">Cancel</a>

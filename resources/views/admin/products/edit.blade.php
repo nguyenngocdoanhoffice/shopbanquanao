@@ -7,7 +7,7 @@
     </div>
 
     <div class="admin-card p-4">
-        <form method="post" action="{{ route('admin.products.update', $product) }}">
+        <form method="post" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
             @csrf
             @method('put')
             <div class="mb-3">
@@ -33,8 +33,16 @@
                 <textarea name="description" class="form-control" rows="3">{{ old('description', $product->description) }}</textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label">Image URL</label>
-                <input type="text" name="image" class="form-control" value="{{ old('image', $product->image) }}">
+                <label class="form-label">Product image</label>
+                <input type="file" name="image" class="form-control" accept="image/*">
+                @if ($product->image)
+                    @php
+                        $imageUrl = \Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://'])
+                            ? $product->image
+                            : \Illuminate\Support\Facades\Storage::url($product->image);
+                    @endphp
+                    <img src="{{ $imageUrl }}" class="img-fluid rounded-3 mt-3" style="max-height: 200px;" alt="{{ $product->name }}">
+                @endif
             </div>
             <button class="btn btn-dark" type="submit">Update</button>
             <a class="btn btn-outline-secondary" href="{{ route('admin.products.index') }}">Cancel</a>

@@ -90,6 +90,24 @@
                 animation-delay: var(--delay, 0s);
             }
 
+            .cart-link {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .cart-badge {
+                position: absolute;
+                top: -0.3rem;
+                right: -0.4rem;
+                background: var(--brand);
+                color: #fff;
+                border-radius: 999px;
+                font-size: 0.7rem;
+                padding: 0.1rem 0.45rem;
+            }
+
             @keyframes fadeUp {
                 to {
                     opacity: 1;
@@ -120,7 +138,15 @@
                             <a class="nav-link" href="{{ route('products.index') }}">Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('cart.index') }}">Cart <span class="soft-pill">{{ $cartCount }}</span></a>
+                            <a class="nav-link cart-link" href="{{ route('cart.index') }}" aria-label="Cart">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 6H22L20 14H8L6 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                                    <path d="M6 6L4 3H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                    <path d="M9 20C9.55228 20 10 19.5523 10 19C10 18.4477 9.55228 18 9 18C8.44772 18 8 18.4477 8 19C8 19.5523 8.44772 20 9 20Z" fill="currentColor"/>
+                                    <path d="M18 20C18.5523 20 19 19.5523 19 19C19 18.4477 18.5523 18 18 18C17.4477 18 17 18.4477 17 19C17 19.5523 17.4477 20 18 20Z" fill="currentColor"/>
+                                </svg>
+                                <span class="cart-badge">{{ $cartCount }}</span>
+                            </a>
                         </li>
                     </ul>
                     <div class="d-flex align-items-center gap-2">

@@ -4,8 +4,16 @@
     <div class="row g-4">
         <div class="col-12 col-lg-6">
             <div class="bg-white p-4 rounded-4 shadow-sm h-100">
-                @if ($product->image)
-                    <img src="{{ $product->image }}" class="img-fluid rounded-3" alt="{{ $product->name }}">
+                @php
+                    $imageUrl = null;
+                    if ($product->image) {
+                        $imageUrl = \Illuminate\Support\Str::startsWith($product->image, ['http://', 'https://'])
+                            ? $product->image
+                            : \Illuminate\Support\Facades\Storage::url($product->image);
+                    }
+                @endphp
+                @if ($imageUrl)
+                    <img src="{{ $imageUrl }}" class="img-fluid rounded-3" alt="{{ $product->name }}">
                 @else
                     <div class="rounded-3" style="height: 320px; background: linear-gradient(135deg, rgba(15, 23, 42, 0.12), rgba(14, 165, 233, 0.18));"></div>
                 @endif
