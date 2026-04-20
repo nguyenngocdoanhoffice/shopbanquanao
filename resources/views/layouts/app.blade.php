@@ -118,7 +118,7 @@
     </head>
     <body>
         @php
-            $cartCount = collect(session('cart', []))->sum('quantity');
+            $cartCount = count(session('cart', []));
         @endphp
         <nav class="navbar navbar-expand-lg nav-glass py-3">
             <div class="container">
