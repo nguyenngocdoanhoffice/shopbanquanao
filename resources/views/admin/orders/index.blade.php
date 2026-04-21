@@ -26,6 +26,9 @@
                             <td>{{ $order->user?->name }}</td>
                             <td>{{ number_format($order->total, 0) }} VND</td>
                             <td>
+                                @php
+                                    $isCompleted = $order->status === 'completed';
+                                @endphp
                                 <form method="post" action="{{ route('admin.orders.update', $order) }}" class="d-flex gap-2 align-items-center">
                                     @csrf
                                     @method('patch')
@@ -38,14 +41,16 @@
                                             'canceled' => 'Đã hủy',
                                         ];
                                     @endphp
-                                    <select name="status" class="form-select form-select-sm" style="min-width: 140px;">
+                                    <select name="status" class="form-select form-select-sm" style="min-width: 140px;" @disabled($isCompleted)>
                                         @foreach ($statusLabels as $status => $label)
                                             <option value="{{ $status }}" @selected($order->status === $status)>
                                                 {{ $label }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button class="btn btn-outline-dark btn-sm" type="submit">Lưu</button>
+                                    <button class="btn btn-outline-dark btn-sm" type="submit" @disabled($isCompleted)>
+                                        Lưu
+                                    </button>
                                 </form>
                             </td>
                             <td>{{ $order->created_at?->format('Y-m-d') }}</td>

@@ -98,6 +98,7 @@
                     <a class="admin-link" href="{{ route('admin.products.index') }}">Sản phẩm</a>
                     <a class="admin-link" href="{{ route('admin.categories.index') }}">Danh mục</a>
                     <a class="admin-link" href="{{ route('admin.orders.index') }}">Đơn hàng</a>
+                    <a class="admin-link" href="{{ route('admin.reports.index') }}">Báo cáo</a>
                 </nav>
                 <div class="mt-4">
                     <a class="admin-link" href="{{ route('home') }}">Về cửa hàng</a>

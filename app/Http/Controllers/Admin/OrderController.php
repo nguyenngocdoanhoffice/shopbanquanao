@@ -19,6 +19,10 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        if ($order->status === 'completed') {
+            return back()->with('error', 'Đơn hàng đã hoàn thành nên không thể thay đổi trạng thái.');
+        }
+
         $data = $request->validate([
             'status' => ['required', 'in:' . implode(',', $this->statuses)],
         ]);

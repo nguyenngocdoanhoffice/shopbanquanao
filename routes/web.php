@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
@@ -43,5 +44,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('categories', AdminCategoryController::class)->except(['show']);
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::patch('orders/{order}', [AdminOrderController::class, 'update'])->name('orders.update');
+        Route::get('reports', [AdminReportController::class, 'index'])->name('reports.index');
     });
 });
