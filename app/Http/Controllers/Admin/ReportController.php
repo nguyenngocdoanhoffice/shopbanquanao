@@ -55,12 +55,28 @@ class ReportController extends Controller
         $reportTotal = (clone $ordersQuery)->sum('total');
         $orders = $ordersQuery->latest()->get();
 
-        // Tinh lai/lo dua tren don hang da hoan thanh
-        $profit = OrderItem::query()
+        // Tinh lai/lo: tong tien sau giam gia - tong gia nhap
+        $costQuery = OrderItem::query()
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->where('orders.status', 'completed')
-            ->select(DB::raw('SUM((order_items.price - order_items.import_price) * order_items.quantity) as profit'))
-            ->value('profit');
+            ->where('orders.status', 'completed');
+
+        if ($reportType === 'month') {
+            $target = Carbon::createFromFormat('Y-m', $reportDate);
+            $costQuery->whereYear('orders.created_at', $target->year)
+                ->whereMonth('orders.created_at', $target->month);
+        } elseif ($reportType === 'year') {
+            $target = Carbon::createFromFormat('Y', $reportDate);
+            $costQuery->whereYear('orders.created_at', $target->year);
+        } else {
+            $target = Carbon::parse($reportDate);
+            $costQuery->whereDate('orders.created_at', $target->toDateString());
+        }
+
+        $cost = $costQuery
+            ->select(DB::raw('SUM(order_items.import_price * order_items.quantity) as cost'))
+            ->value('cost');
+
+        $profit = $reportTotal - ($cost ?? 0);
 
         // Top san pham ban chay
         $topSelling = OrderItem::query()
