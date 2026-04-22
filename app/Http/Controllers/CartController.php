@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,9 +15,16 @@ class CartController extends Controller
         $cart = Auth::check()
             ? $this->loadUserCartToSession()
             : session()->get('cart', []);
-        $total = $this->cartTotal($cart);
+        $totals = $this->calculateTotals($cart);
+        $coupon = session('coupon');
 
-        return view('cart.index', compact('cart', 'total'));
+        return view('cart.index', [
+            'cart' => $cart,
+            'subtotal' => $totals['subtotal'],
+            'discount' => $totals['discount'],
+            'total' => $totals['total'],
+            'coupon' => $coupon,
+        ]);
     }
 
     public function add(Request $request, Product $product)
@@ -29,13 +37,21 @@ class CartController extends Controller
         $quantity = $data['quantity'] ?? 1;
         $size = $data['size'] ?? null;
 
+        if ($product->stock <= 0) {
+            return back()->with('error', 'Sản phẩm đã hết hàng.');
+        }
+
         if (Auth::check()) {
             $item = CartItem::firstOrNew([
                 'user_id' => Auth::id(),
                 'product_id' => $product->id,
             ]);
 
-            $item->quantity = ($item->quantity ?? 0) + $quantity;
+            $currentQty = $item->quantity ?? 0;
+            if ($currentQty + $quantity > $product->stock) {
+                return back()->with('error', 'Số lượng vượt quá tồn kho.');
+            }
+            $item->quantity = $currentQty + $quantity;
             $item->size = $size ?? $item->size;
             $item->save();
 
@@ -45,7 +61,11 @@ class CartController extends Controller
             $cart = session()->get('cart', []);
 
             if (isset($cart[$product->id])) {
-                $cart[$product->id]['quantity'] += $quantity;
+                $newQty = $cart[$product->id]['quantity'] + $quantity;
+                if ($newQty > $product->stock) {
+                    return back()->with('error', 'Số lượng vượt quá tồn kho.');
+                }
+                $cart[$product->id]['quantity'] = $newQty;
                 $cart[$product->id]['size'] = $size ?? $cart[$product->id]['size'];
             } else {
                 $cart[$product->id] = [
@@ -68,6 +88,10 @@ class CartController extends Controller
         $data = $request->validate([
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
+
+        if ($data['quantity'] > $product->stock) {
+            return back()->with('error', 'Số lượng vượt quá tồn kho.');
+        }
 
         if (Auth::check()) {
             CartItem::where('user_id', Auth::id())
@@ -104,14 +128,64 @@ class CartController extends Controller
         return back()->with('success', 'Item removed.');
     }
 
-    private function cartTotal(array $cart): float
+    public function applyCoupon(Request $request)
     {
-        $total = 0;
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
+        $data = $request->validate([
+            'code' => ['required', 'string', 'max:50'],
+        ]);
+
+        $coupon = Coupon::where('code', $data['code'])
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('expired_at')
+                    ->orWhere('expired_at', '>=', now());
+            })
+            ->first();
+
+        if (! $coupon) {
+            return back()->with('error', 'Mã giảm giá không hợp lệ.');
         }
 
-        return $total;
+        session()->put('coupon', [
+            'code' => $coupon->code,
+            'discount_percent' => $coupon->discount_percent,
+            'discount_amount' => $coupon->discount_amount,
+        ]);
+
+        return back()->with('success', 'Áp dụng mã giảm giá thành công.');
+    }
+
+    public function removeCoupon()
+    {
+        session()->forget('coupon');
+
+        return back()->with('success', 'Đã xóa mã giảm giá.');
+    }
+
+    private function calculateTotals(array $cart): array
+    {
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+
+        $discount = 0;
+        $coupon = session('coupon');
+        if ($coupon) {
+            if (!empty($coupon['discount_percent'])) {
+                $discount = $subtotal * ($coupon['discount_percent'] / 100);
+            } elseif (!empty($coupon['discount_amount'])) {
+                $discount = $coupon['discount_amount'];
+            }
+        }
+
+        $discount = min($discount, $subtotal);
+
+        return [
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'total' => $subtotal - $discount,
+        ];
     }
 
     private function loadUserCartToSession(): array

@@ -25,8 +25,16 @@
                 <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Giá</label>
+                <label class="form-label">Giá nhập</label>
+                <input type="number" step="0.01" name="import_price" class="form-control" value="{{ old('import_price', $product->import_price) }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Giá bán</label>
                 <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price', $product->price) }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tồn kho</label>
+                <input type="number" name="stock" class="form-control" value="{{ old('stock', $product->stock) }}" min="0" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Mô tả</label>

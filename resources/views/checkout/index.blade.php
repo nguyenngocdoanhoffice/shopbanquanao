@@ -36,7 +36,12 @@
                         </li>
                     @endforeach
                 </ul>
-                <p class="mb-0">Tong: <strong>{{ number_format($total, 0) }} VND</strong></p>
+                <p class="mb-1">Tạm tính: <strong>{{ number_format($subtotal, 0) }} VND</strong></p>
+                <p class="mb-1">Giảm giá: <strong>{{ number_format($discount, 0) }} VND</strong></p>
+                @if ($coupon)
+                    <p class="mb-1 text-muted">Mã: {{ $coupon['code'] }}</p>
+                @endif
+                <p class="mb-0">Tổng: <strong>{{ number_format($total, 0) }} VND</strong></p>
             </div>
         </div>
     </div>

@@ -51,10 +51,34 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-end">
-            <div class="bg-white p-4 rounded-4 shadow-sm">
-                <p class="mb-2">Tổng: <strong>{{ number_format($total, 0) }} VND</strong></p>
-                <a class="btn btn-brand" href="{{ route('checkout.index') }}">Thanh toán</a>
+        <div class="row g-4 justify-content-end">
+            <div class="col-12 col-lg-5">
+                <div class="bg-white p-4 rounded-4 shadow-sm">
+                    <h6 class="mb-3">Mã giảm giá</h6>
+                    @if ($coupon)
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-semibold">{{ $coupon['code'] }}</span>
+                            <form method="post" action="{{ route('cart.coupon.remove') }}">
+                                @csrf
+                                <button class="btn btn-outline-secondary btn-sm" type="submit">Xóa</button>
+                            </form>
+                        </div>
+                    @else
+                        <form method="post" action="{{ route('cart.coupon.apply') }}" class="d-flex gap-2">
+                            @csrf
+                            <input type="text" name="code" class="form-control" placeholder="Nhập mã">
+                            <button class="btn btn-outline-brand" type="submit">Áp dụng</button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="bg-white p-4 rounded-4 shadow-sm">
+                    <p class="mb-2">Tạm tính: <strong>{{ number_format($subtotal, 0) }} VND</strong></p>
+                    <p class="mb-2">Giảm giá: <strong>{{ number_format($discount, 0) }} VND</strong></p>
+                    <p class="mb-3">Tổng: <strong>{{ number_format($total, 0) }} VND</strong></p>
+                    <a class="btn btn-brand w-100" href="{{ route('checkout.index') }}">Thanh toán</a>
+                </div>
             </div>
         </div>
     @endif

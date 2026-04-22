@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['user_id', 'address', 'phone', 'total', 'status'])]
+#[Fillable(['user_id', 'address', 'phone', 'total', 'status', 'coupon_code', 'discount_amount'])]
 class Order extends Model
 {
     use HasFactory;

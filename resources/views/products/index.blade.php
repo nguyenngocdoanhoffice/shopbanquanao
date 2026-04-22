@@ -41,9 +41,14 @@
                         <span class="soft-pill">{{ $product->category?->name }}</span>
                         <h5 class="card-title mt-3">{{ $product->name }}</h5>
                         <p class="fw-semibold mb-3">{{ number_format($product->price, 0) }} VND</p>
+                        @if ($product->stock === 0)
+                            <span class="badge bg-secondary">Hết hàng</span>
+                        @endif
                         <div class="d-flex gap-2">
                             <a class="btn btn-outline-brand btn-sm" href="{{ route('products.show', $product) }}">Xem chi tiết</a>
-                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}">Thêm vào giỏ</button>
+                            <button class="btn btn-brand btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#productModal{{ $product->id }}" @disabled($product->stock === 0)>
+                                Thêm vào giỏ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -88,7 +93,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
+                                    <button class="btn btn-brand" type="submit" @disabled($product->stock === 0)>Thêm vào giỏ</button>
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
                                 </div>
                             </form>

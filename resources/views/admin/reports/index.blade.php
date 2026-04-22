@@ -36,7 +36,9 @@
         </form>
     </div>
 
-    <div class="admin-card p-4">
+    @include('admin.reports._tables')
+
+    <div class="admin-card p-4 mt-4">
         <div class="table-responsive">
             <table class="table align-middle">
                 <thead>

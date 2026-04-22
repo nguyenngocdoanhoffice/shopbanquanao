@@ -17,7 +17,8 @@
                         <th>STT</th>
                         <th>Tên</th>
                         <th>Danh mục</th>
-                        <th>Giá</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
                         <th width="160"></th>
                     </tr>
                 </thead>
@@ -28,6 +29,12 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category?->name }}</td>
                             <td>{{ number_format($product->price, 0) }} VND</td>
+                            <td>
+                                <span class="fw-semibold">{{ $product->stock }}</span>
+                                @if ($product->stock === 0)
+                                    <div class="text-danger small">Cần nhập thêm</div>
+                                @endif
+                            </td>
                             <td class="d-flex gap-2">
                                 <a class="btn btn-outline-secondary btn-sm" href="{{ route('admin.products.edit', $product) }}">Sửa</a>
                                 <form method="post" action="{{ route('admin.products.destroy', $product) }}">
@@ -39,7 +46,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-muted">Chưa có sản phẩm.</td>
+                            <td colspan="6" class="text-muted">Chưa có sản phẩm.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -24,6 +24,9 @@
                 <span class="soft-pill">{{ $product->category?->name }}</span>
                 <h2 class="mt-3 mb-2">{{ $product->name }}</h2>
                 <p class="fw-semibold fs-4 mb-3">{{ number_format($product->price, 0) }} VND</p>
+                @if ($product->stock === 0)
+                    <span class="badge bg-secondary mb-3">Hết hàng</span>
+                @endif
                 <p class="text-muted mb-4">{{ $product->description }}</p>
 
                 @php
@@ -50,7 +53,7 @@
                         <input type="number" name="quantity" class="form-control" value="1" min="1" style="max-width: 120px;">
                     </div>
                     <div class="d-flex gap-2 align-self-end">
-                        <button class="btn btn-brand" type="submit">Thêm vào giỏ</button>
+                        <button class="btn btn-brand" type="submit" @disabled($product->stock === 0)>Thêm vào giỏ</button>
                         <a class="btn btn-outline-brand" href="{{ route('products.index') }}">Quay lại</a>
                     </div>
                 </form>

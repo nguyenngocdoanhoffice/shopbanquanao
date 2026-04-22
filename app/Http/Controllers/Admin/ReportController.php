@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -52,6 +55,46 @@ class ReportController extends Controller
         $reportTotal = (clone $ordersQuery)->sum('total');
         $orders = $ordersQuery->latest()->get();
 
-        return view('admin.reports.index', compact('reportType', 'reportDate', 'reportLabel', 'reportTotal', 'orders'));
+        // Tinh lai/lo dua tren don hang da hoan thanh
+        $profit = OrderItem::query()
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->where('orders.status', 'completed')
+            ->select(DB::raw('SUM((order_items.price - order_items.import_price) * order_items.quantity) as profit'))
+            ->value('profit');
+
+        // Top san pham ban chay
+        $topSelling = OrderItem::query()
+            ->with('product')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->where('orders.status', 'completed')
+            ->select('order_items.product_id', DB::raw('SUM(order_items.quantity) as sold_qty'))
+            ->groupBy('order_items.product_id')
+            ->orderByDesc('sold_qty')
+            ->take(5)
+            ->get();
+
+        // San pham ban it (ke ca so luong = 0)
+        $lowSelling = Product::query()
+            ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+            ->leftJoin('orders', function ($join) {
+                $join->on('orders.id', '=', 'order_items.order_id')
+                    ->where('orders.status', 'completed');
+            })
+            ->select('products.id', 'products.name', DB::raw('COALESCE(SUM(order_items.quantity), 0) as sold_qty'))
+            ->groupBy('products.id', 'products.name')
+            ->orderBy('sold_qty')
+            ->take(5)
+            ->get();
+
+        return view('admin.reports.index', compact(
+            'reportType',
+            'reportDate',
+            'reportLabel',
+            'reportTotal',
+            'orders',
+            'profit',
+            'topSelling',
+            'lowSelling'
+        ));
     }
 }
