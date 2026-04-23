@@ -34,6 +34,7 @@ class CartController extends Controller
             'size' => ['nullable', 'string', 'max:20'],
         ]);
 
+        $maxQty = 500;
         $quantity = $data['quantity'] ?? 1;
         $size = $data['size'] ?? null;
 
@@ -48,10 +49,15 @@ class CartController extends Controller
             ]);
 
             $currentQty = $item->quantity ?? 0;
-            if ($currentQty + $quantity > $product->stock) {
-                return back()->with('error', 'Số lượng vượt quá tồn kho.');
+            $desiredQty = $currentQty + $quantity;
+            $allowedMax = min($maxQty, $product->stock);
+            if ($desiredQty > $allowedMax) {
+                if ($product->stock < $maxQty) {
+                    return back()->with('error', 'Chỉ được mua với số lượng cho phép: ' . $product->stock . '.');
+                }
+                return back()->with('error', 'Chỉ được phép mua tối đa 500 sản phẩm.');
             }
-            $item->quantity = $currentQty + $quantity;
+            $item->quantity = $desiredQty;
             $item->size = $size ?? $item->size;
             $item->save();
 
@@ -61,13 +67,24 @@ class CartController extends Controller
             $cart = session()->get('cart', []);
 
             if (isset($cart[$product->id])) {
-                $newQty = $cart[$product->id]['quantity'] + $quantity;
-                if ($newQty > $product->stock) {
-                    return back()->with('error', 'Số lượng vượt quá tồn kho.');
+                $desiredQty = $cart[$product->id]['quantity'] + $quantity;
+                $allowedMax = min($maxQty, $product->stock);
+                if ($desiredQty > $allowedMax) {
+                    if ($product->stock < $maxQty) {
+                        return back()->with('error', 'Chỉ được mua với số lượng cho phép: ' . $product->stock . '.');
+                    }
+                    return back()->with('error', 'Chỉ được phép mua tối đa 500 sản phẩm.');
                 }
-                $cart[$product->id]['quantity'] = $newQty;
+                $cart[$product->id]['quantity'] = $desiredQty;
                 $cart[$product->id]['size'] = $size ?? $cart[$product->id]['size'];
             } else {
+                $allowedMax = min($maxQty, $product->stock);
+                if ($quantity > $allowedMax) {
+                    if ($product->stock < $maxQty) {
+                        return back()->with('error', 'Chỉ được mua với số lượng cho phép: ' . $product->stock . '.');
+                    }
+                    return back()->with('error', 'Chỉ được phép mua tối đa 500 sản phẩm.');
+                }
                 $cart[$product->id] = [
                     'id' => $product->id,
                     'name' => $product->name,
@@ -89,8 +106,13 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        if ($data['quantity'] > $product->stock) {
-            return back()->with('error', 'Số lượng vượt quá tồn kho.');
+        $maxQty = 500;
+        $allowedMax = min($maxQty, $product->stock);
+        if ($data['quantity'] > $allowedMax) {
+            if ($product->stock < $maxQty) {
+                return back()->with('error', 'Chỉ được mua với số lượng cho phép: ' . $product->stock . '.');
+            }
+            return back()->with('error', 'Chỉ được phép mua tối đa 500 sản phẩm.');
         }
 
         if (Auth::check()) {

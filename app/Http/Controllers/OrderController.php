@@ -55,7 +55,6 @@ class OrderController extends Controller
         $totals = $this->calculateTotals($cart);
         $coupon = session('coupon');
 
-        // Kiem tra ton kho truoc khi tao don hang.
         foreach ($cart as $item) {
             $product = Product::find($item['id']);
             if (!$product || $product->stock < $item['quantity']) {
@@ -63,7 +62,6 @@ class OrderController extends Controller
             }
         }
 
-        // Create the order header first.
         $order = Order::create([
             'user_id' => Auth::id(),
             'address' => $data['address'],
@@ -74,7 +72,6 @@ class OrderController extends Controller
             'discount_amount' => $totals['discount'],
         ]);
 
-        // Then create each order item from the session cart.
         foreach ($cart as $item) {
             $product = Product::find($item['id']);
             OrderItem::create([

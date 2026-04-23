@@ -33,6 +33,8 @@
                                 <span class="fw-semibold">{{ $product->stock }}</span>
                                 @if ($product->stock === 0)
                                     <div class="text-danger small">Cần nhập thêm</div>
+                                @elseif ($product->stock < 50)
+                                    <div class="text-warning small">Sắp hết hàng</div>
                                 @endif
                             </td>
                             <td class="d-flex gap-2">
