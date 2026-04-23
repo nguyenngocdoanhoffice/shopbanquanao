@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CartItem::class);
     }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class)->withTimestamps();
+    }
 }

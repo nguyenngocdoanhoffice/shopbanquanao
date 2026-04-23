@@ -19,6 +19,7 @@
                         <th>Giảm %</th>
                         <th>Giảm tiền</th>
                         <th>Hết hạn</th>
+                        <th>Áp dụng</th>
                         <th>Trạng thái</th>
                         <th width="160"></th>
                     </tr>
@@ -31,6 +32,7 @@
                             <td>{{ $coupon->discount_percent ?? '-' }}</td>
                             <td>{{ $coupon->discount_amount ? number_format($coupon->discount_amount, 0) . ' VND' : '-' }}</td>
                             <td>{{ $coupon->expired_at?->format('Y-m-d') ?? '-' }}</td>
+                            <td>{{ $coupon->apply_all ? 'Tất cả' : 'Chọn lọc' }}</td>
                             <td>{{ $coupon->is_active ? 'Đang dùng' : 'Tạm tắt' }}</td>
                             <td class="d-flex gap-2">
                                 <a class="btn btn-outline-secondary btn-sm" href="{{ route('admin.coupons.edit', $coupon) }}">Sửa</a>

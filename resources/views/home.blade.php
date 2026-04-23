@@ -21,6 +21,38 @@
         </div>
     </div>
 
+    @auth
+        @if (!empty($coupons) && $coupons->isNotEmpty())
+            <div class="bg-white p-3 p-lg-4 rounded-4 shadow-sm mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Mã giảm giá dành cho bạn</h4>
+                    <a class="btn btn-outline-brand btn-sm" href="{{ route('coupons.index') }}">Xem tất cả</a>
+                </div>
+                <div class="row g-3">
+                    @foreach ($coupons->take(4) as $coupon)
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <div class="p-3 rounded-4" style="background: rgba(15, 23, 42, 0.04);">
+                                <div class="fw-semibold">{{ $coupon->code }}</div>
+                                <div class="text-muted small">
+                                    @if ($coupon->discount_percent)
+                                        Giảm {{ $coupon->discount_percent }}%
+                                    @elseif ($coupon->discount_amount)
+                                        Giảm {{ number_format($coupon->discount_amount, 0) }} VND
+                                    @else
+                                        Ưu đãi đặc biệt
+                                    @endif
+                                </div>
+                                @if ($coupon->expired_at)
+                                    <div class="text-muted small">Hết hạn: {{ $coupon->expired_at->format('Y-m-d') }}</div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    @endauth
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-0">Sản phẩm mới</h3>
         <a class="btn btn-outline-brand btn-sm" href="{{ route('products.index') }}">Xem tất cả</a>

@@ -148,6 +148,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('orders.index') }}">Đơn hàng</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('coupons.index') }}">Mã giảm giá</a>
+                            </li>
                         @endauth
                         <li class="nav-item">
                             <a class="nav-link cart-link" href="{{ route('cart.index') }}" aria-label="Gio hang">

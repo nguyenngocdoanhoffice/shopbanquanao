@@ -3,16 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function home()
     {
         $products = Product::with('category')->latest()->take(8)->get();
+        $coupons = [];
 
-        return view('home', compact('products'));
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $coupons = Coupon::query()
+                ->where('is_active', true)
+                ->where(function ($query) {
+                    $query->whereNull('expired_at')
+                        ->orWhere('expired_at', '>=', now());
+                })
+                ->where(function ($query) use ($userId) {
+                    $query->where('apply_all', true)
+                        ->orWhereHas('users', function ($builder) use ($userId) {
+                            $builder->where('users.id', $userId);
+                        });
+                })
+                ->orderByDesc('created_at')
+                ->get();
+        }
+
+        return view('home', compact('products', 'coupons'));
     }
 
     public function index(Request $request)

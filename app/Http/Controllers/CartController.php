@@ -168,6 +168,14 @@ class CartController extends Controller
             return back()->with('error', 'Mã giảm giá không hợp lệ.');
         }
 
+        if (Auth::check()) {
+            if (! $coupon->apply_all && ! $coupon->users()->where('users.id', Auth::id())->exists()) {
+                return back()->with('error', 'Mã giảm giá không áp dụng cho tài khoản này.');
+            }
+        } elseif (! $coupon->apply_all) {
+            return back()->with('error', 'Mã giảm giá này chỉ áp dụng cho khách hàng được chọn.');
+        }
+
         session()->put('coupon', [
             'code' => $coupon->code,
             'discount_percent' => $coupon->discount_percent,
